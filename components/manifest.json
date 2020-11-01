@@ -1,0 +1,8 @@
+{
+  "domain": "ubibot",
+  "name": "Ubibot",
+  "documentation": "https://www.ubibot.io/platform-api/",
+  "requirements": [],
+  "dependencies": [],
+  "codeowners": []
+}
