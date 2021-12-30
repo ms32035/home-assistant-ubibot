@@ -87,11 +87,13 @@ class UbibotSensor(SensorEntity):
     def device_info(self):
         """Return device"""
         return {
-            "identifiers": {("ubibot", self._ubibot_data["channel"]["full_serial"])},
-            "name": self._ubibot_data["channel"]["full_serial"],
-            "firmware": self._ubibot_data["channel"]["firmware"],
+            "identifiers": {
+                ("ubibot", self._ubibot_data.data["channel"]["full_serial"])
+            },
+            "name": self._ubibot_data.data["channel"]["full_serial"],
+            "firmware": self._ubibot_data.data["channel"]["firmware"],
             "manufacturer": "Ubibot",
-            "model": MODELS[self._ubibot_data["channel"]["product_id"]],
+            "model": MODELS[self._ubibot_data.data["channel"]["product_id"]],
         }
 
 
