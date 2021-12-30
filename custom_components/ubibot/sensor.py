@@ -8,10 +8,10 @@ import threading
 import requests
 
 from homeassistant.const import CONF_API_KEY
-from homeassistant.helpers.entity import Entity
+from homeassistant.components.sensor import SensorEntity, SensorStateClass
 
 from . import CONF_CHANNEL, CONF_INTERVAL
-from .const import SENSOR_TYPES
+from .const import SENSOR_TYPES, MODELS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         add_devices([UbibotSensor(t, channel, ubibot_data)])
 
 
-class UbibotSensor(Entity):
+class UbibotSensor(SensorEntity):
     """Representation of a Sensor."""
 
     def __init__(self, sensor_type, channel, ubibot_data):
@@ -47,8 +47,8 @@ class UbibotSensor(Entity):
         return f"Ubibot - {self._channel} - {self._type}"
 
     @property
-    def state(self):
-        """Return the state of the sensor."""
+    def native_value(self):
+        """Return the native value of the sensor."""
         return self._state
 
     @property
@@ -57,8 +57,8 @@ class UbibotSensor(Entity):
         return SENSOR_TYPES[self._type]["class"]
 
     @property
-    def unit_of_measurement(self):
-        """Return the unit of measurement."""
+    def native_unit_of_measurement(self):
+        """Return the native unit of measurement."""
         return SENSOR_TYPES[self._type]["unit"]
 
     @property
@@ -77,6 +77,22 @@ class UbibotSensor(Entity):
         self._state = self._ubibot_data.data["channel"]["last_values"][
             SENSOR_TYPES[self._type]["field"]
         ]["value"]
+
+    @property
+    def state_class(self):
+        """Return sensor state class"""
+        return SensorStateClass.MEASUREMENT
+
+    @property
+    def device_info(self):
+        """Return device"""
+        return {
+            "identifiers": {("ubibot", self._ubibot_data["channel"]["full_serial"])},
+            "name": self._ubibot_data["channel"]["full_serial"],
+            "firmware": self._ubibot_data["channel"]["firmware"],
+            "manufacturer": "Ubibot",
+            "model": MODELS[self._ubibot_data["channel"]["product_id"]],
+        }
 
 
 class UbibotData:
@@ -102,8 +118,9 @@ class UbibotData:
 
     def update(self):
         """Get data from Ubibot API."""
-        if datetime.now() < self.last_refresh + self.scan_interval or not self._update_in_progress.acquire(
-            False
+        if (
+            datetime.now() < self.last_refresh + self.scan_interval
+            or not self._update_in_progress.acquire(False)
         ):
             return
         try:

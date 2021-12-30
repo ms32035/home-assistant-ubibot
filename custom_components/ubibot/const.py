@@ -26,3 +26,5 @@ SENSOR_TYPES = {
         "field": "field3",
     },
 }
+
+MODELS = {"ubibot-ws1": "WS1"}

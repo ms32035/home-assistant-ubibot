@@ -1,0 +1,12 @@
+{
+  "name": "Ubibot",
+  "render_readme": true,
+  "domains": [
+    "binary_sensor",
+    "climate",
+    "light",
+    "sensor",
+    "switch",
+    "water_heater"
+  ]
+}
