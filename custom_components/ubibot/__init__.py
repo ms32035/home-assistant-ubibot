@@ -16,14 +16,8 @@ DOMAIN = "ubibot"
 
 CONFIG_SCHEMA = vol.Schema(
     {
-        DOMAIN: vol.Schema(
-            {
-                vol.Required(CONF_API_KEY): cv.string,
-                vol.Required(CONF_CHANNEL): cv.string,
-                vol.Required(CONF_USERNAME): cv.string,
-                vol.Optional(CONF_SCAN_INTERVAL): cv.positive_int,
-            }
-        )
+        vol.Required(CONF_API_KEY): cv.string,
+        vol.Required(CONF_CHANNEL): cv.string,
+        vol.Required(CONF_SCAN_INTERVAL, default=900): cv.positive_int,
     },
-    extra=vol.ALLOW_EXTRA,
 )
