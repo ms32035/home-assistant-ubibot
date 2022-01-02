@@ -7,5 +7,6 @@
   "dependencies": [],
   "codeowners": ["@ms32035"],
   "iot_class": "cloud_polling",
+  "config_flow": true,
   "version": "0.2.0"
 }

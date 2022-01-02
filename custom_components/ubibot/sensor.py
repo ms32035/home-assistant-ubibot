@@ -7,10 +7,10 @@ import threading
 
 import requests
 
-from homeassistant.const import CONF_API_KEY
+from homeassistant.const import CONF_API_KEY, CONF_SCAN_INTERVAL
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 
-from . import CONF_CHANNEL, CONF_INTERVAL
+from . import CONF_CHANNEL
 from .const import SENSOR_TYPES, MODELS
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
     api_key = config.get(CONF_API_KEY)
     channel = config.get(CONF_CHANNEL)
-    scan_interval = config.get(CONF_INTERVAL)
+    scan_interval = config.get(CONF_SCAN_INTERVAL)
 
     ubibot_data = UbibotData(api_key, channel, scan_interval)
 
