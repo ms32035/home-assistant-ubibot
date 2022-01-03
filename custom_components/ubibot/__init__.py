@@ -4,7 +4,7 @@ import logging
 
 import voluptuous as vol
 
-from homeassistant.const import CONF_API_KEY, CONF_USERNAME, CONF_SCAN_INTERVAL
+from homeassistant.const import CONF_API_KEY, CONF_SCAN_INTERVAL
 from homeassistant.helpers import config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
