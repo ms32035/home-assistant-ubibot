@@ -11,8 +11,9 @@ Install using HACS
 Configure as a sensor in HA YAML configuration
 
 ```
-platform: ubibot
-api_key: !secret ubibot_apikey
-channel: !secret ubibot_channel_number
-scan_interval: 900
+sensor:
+  platform: ubibot
+  api_key: !secret ubibot_apikey
+  channel: !secret ubibot_channel_number
+  scan_interval: 900
 ```
