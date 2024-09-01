@@ -3,7 +3,9 @@ from homeassistant.const import (
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_ILLUMINANCE,
     DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_SIGNAL_STRENGTH,
     TEMP_CELSIUS,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
 )
 
 SENSOR_TYPES = {
@@ -24,6 +26,12 @@ SENSOR_TYPES = {
         "unit": "lux",
         "icon": "mdi:lightbulb-on-outline",
         "field": "field3",
+    },
+    "wifi_rssi": {
+        "class": DEVICE_CLASS_SIGNAL_STRENGTH,
+        "unit": SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        "icon": "mdi:wifi",
+        "field": "field5",
     },
 }
 
