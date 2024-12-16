@@ -1,34 +1,34 @@
 """Constants for Ubibot module."""
+
+from homeassistant.components.sensor.const import SensorDeviceClass
 from homeassistant.const import (
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_ILLUMINANCE,
-    DEVICE_CLASS_TEMPERATURE,
-    DEVICE_CLASS_SIGNAL_STRENGTH,
-    TEMP_CELSIUS,
+    LIGHT_LUX,
+    PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    UnitOfTemperature,
 )
 
 SENSOR_TYPES = {
     "temperature": {
-        "class": DEVICE_CLASS_TEMPERATURE,
-        "unit": TEMP_CELSIUS,
+        "class": SensorDeviceClass.TEMPERATURE,
+        "unit": UnitOfTemperature.CELSIUS,
         "icon": "mdi:thermometer",
         "field": "field1",
     },
     "humidity": {
-        "class": DEVICE_CLASS_HUMIDITY,
-        "unit": "%",
+        "class": SensorDeviceClass.HUMIDITY,
+        "unit": PERCENTAGE,
         "icon": "mdi:water-percent",
         "field": "field2",
     },
     "lux": {
-        "class": DEVICE_CLASS_ILLUMINANCE,
-        "unit": "lux",
+        "class": SensorDeviceClass.ILLUMINANCE,
+        "unit": LIGHT_LUX,
         "icon": "mdi:lightbulb-on-outline",
         "field": "field3",
     },
     "wifi_rssi": {
-        "class": DEVICE_CLASS_SIGNAL_STRENGTH,
+        "class": SensorDeviceClass.SIGNAL_STRENGTH,
         "unit": SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
         "icon": "mdi:wifi",
         "field": "field5",
@@ -36,3 +36,7 @@ SENSOR_TYPES = {
 }
 
 MODELS = {"ubibot-ws1": "WS1"}
+
+CONF_CHANNEL = "channel"
+
+DOMAIN = "ubibot"

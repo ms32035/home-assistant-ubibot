@@ -21,6 +21,6 @@ sensor:
 Store secrets in secrets.yaml
 
 ```
-ubibot_apikey: "YOUR_API_KEY" 
+ubibot_apikey: "YOUR_API_KEY"
 ubibot_channel_number: "YOUR_CHANNEL_NUMBER"
 ```

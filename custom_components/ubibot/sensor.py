@@ -4,29 +4,42 @@ from datetime import datetime
 import json
 import logging
 import threading
+import typing
 
 import requests
 
 from homeassistant.const import CONF_API_KEY, CONF_SCAN_INTERVAL
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.helpers.typing import DiscoveryInfoType
+from homeassistant.helpers.device_registry import DeviceInfo
 
-from . import CONF_CHANNEL
-from .const import SENSOR_TYPES, MODELS
+if typing.TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+
+    from homeassistant.config_entries import ConfigEntry
+    from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from .const import SENSOR_TYPES, MODELS, DOMAIN, CONF_CHANNEL
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_entry(
+        hass: "HomeAssistant",
+        config_entry: "ConfigEntry",
+        async_add_entities: "AddEntitiesCallback",
+):
     """Ubibot sensor setup."""
 
-    api_key = config.get(CONF_API_KEY)
-    channel = config.get(CONF_CHANNEL)
-    scan_interval = config.get(CONF_SCAN_INTERVAL)
+    config_data = hass.data[DOMAIN]
+    api_key = config_data[CONF_API_KEY]
+    channel = config_data[CONF_CHANNEL]
+    scan_interval = config_data[CONF_SCAN_INTERVAL]
 
     ubibot_data = UbibotData(api_key, channel, scan_interval)
 
     for t in SENSOR_TYPES.keys():
-        add_devices([UbibotSensor(t, channel, ubibot_data)])
+        async_add_entities([UbibotSensor(t, channel, ubibot_data)])
 
 
 class UbibotSensor(SensorEntity):
@@ -42,7 +55,7 @@ class UbibotSensor(SensorEntity):
         ]["value"]
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the name of the sensor."""
         return f"Ubibot - {self._channel} - {self._type}"
 
@@ -52,26 +65,26 @@ class UbibotSensor(SensorEntity):
         return self._state
 
     @property
-    def device_class(self):
+    def device_class(self) -> str:
         """Return the device class of the sensor."""
         return SENSOR_TYPES[self._type]["class"]
 
     @property
-    def native_unit_of_measurement(self):
+    def native_unit_of_measurement(self) -> str:
         """Return the native unit of measurement."""
         return SENSOR_TYPES[self._type]["unit"]
 
     @property
-    def icon(self):
+    def icon(self) -> str:
         """Return the icon."""
         return SENSOR_TYPES[self._type]["icon"]
 
     @property
     def unique_id(self) -> [str]:
-        """Return the icon."""
+        """Return the unique_id."""
         return f"{self._channel}_{self._type}"
 
-    def update(self):
+    async def async_update(self):
         """Fetch new state data for the sensor."""
         self._ubibot_data.update()
         self._state = self._ubibot_data.data["channel"]["last_values"][
@@ -79,22 +92,26 @@ class UbibotSensor(SensorEntity):
         ]["value"]
 
     @property
-    def state_class(self):
+    def state_class(self) -> SensorStateClass:
         """Return sensor state class"""
         return SensorStateClass.MEASUREMENT
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo:
         """Return device"""
-        return {
-            "identifiers": {
-                ("ubibot", self._ubibot_data.data["channel"]["full_serial"])
-            },
-            "name": self._ubibot_data.data["channel"]["full_serial"],
-            "firmware": self._ubibot_data.data["channel"]["firmware"],
-            "manufacturer": "Ubibot",
-            "model": MODELS[self._ubibot_data.data["channel"]["product_id"]],
-        }
+
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._ubibot_data.data["channel"]["full_serial"])},
+            name=self._ubibot_data.data["channel"]["full_serial"],
+            serial_number=self._ubibot_data.data["channel"]["full_serial"],
+            sw_version=self._ubibot_data.data["channel"]["firmware"],
+            manufacturer="Ubibot",
+            model=MODELS.get(
+                self._ubibot_data.data["channel"]["product_id"],
+                self._ubibot_data.data["channel"]["product_id"],
+            ),
+            model_id=self._ubibot_data.data["channel"]["product_id"],
+        )
 
 
 class UbibotData:
